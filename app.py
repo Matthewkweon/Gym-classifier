@@ -8,6 +8,8 @@ import io
 import requests
 import re
 from flask_cors import CORS
+import cv2
+import numpy as np
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "https://matthewkweon.github.io"}})
@@ -21,12 +23,25 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 client = OpenAI()
 
 # Include the functions from your original code
+
+
 def encode_image(image_path):
-    with Image.open(image_path) as img:
-        img.thumbnail((1024, 1024))
-        buffered = io.BytesIO()
-        img.save(buffered, format="PNG")
-        return base64.b64encode(buffered.getvalue()).decode('utf-8')
+    try:
+        with Image.open(image_path) as img:
+            img.thumbnail((1024, 1024))
+            buffered = io.BytesIO()
+            img.save(buffered, format="PNG")
+            return base64.b64encode(buffered.getvalue()).decode('utf-8')
+    except Exception as e:
+        print(f"PIL Error: {str(e)}")
+        try:
+            img = cv2.imread(image_path)
+            img = cv2.resize(img, (1024, 1024))
+            _, buffer = cv2.imencode('.png', img)
+            return base64.b64encode(buffer).decode('utf-8')
+        except Exception as e:
+            print(f"OpenCV Error: {str(e)}")
+            return None
 
 def parse_duration(duration):
     match = re.match(r'PT(\d+H)?(\d+M)?(\d+S)?', duration)
@@ -101,28 +116,34 @@ def extract_equipment_name(description):
 
 def classify_gym_equipment(image_path):
     base64_image = encode_image(image_path)
+    if base64_image is None:
+        return "Error processing image", "No video available"
 
-    response = client.chat.completions.create(
-        model="gpt-4o",
-        messages=[
-            {
-                "role": "user",
-                "content": [
-                    {"type": "text", "text": "Identify the gym equipment shown in this image. Please provide the name of the gym equipment as so: ''Equipment: name of equipment.'' Provide a brief, 3-paragraph description including: 1) What the equipment is, 2) How it's used and what muscles it targets, and 3) Tips for proper form or common mistakes to avoid. Keep each paragraph concise, about 2-3 sentences long."},
-                    {
-                        "type": "image_url",
-                        "image_url": {
-                            "url": f"data:image/png;base64,{base64_image}"
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": "Identify the gym equipment shown in this image. Please provide the name of the gym equipment as so: ''Equipment: name of equipment.'' Provide a brief, 3-paragraph description including: 1) What the equipment is, 2) How it's used and what muscles it targets, and 3) Tips for proper form or common mistakes to avoid. Keep each paragraph concise, about 2-3 sentences long."},
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url": f"data:image/png;base64,{base64_image}"
+                            }
                         }
-                    }
-                ]
-            }
-        ],
-        max_tokens=300
-    )
+                    ]
+                }
+            ],
+            max_tokens=300
+        )
 
-    description = response.choices[0].message.content
-    
+        description = response.choices[0].message.content
+    except Exception as e:
+        print(f"OpenAI API Error: {str(e)}")
+        return "Error processing image with AI", "No video available"
+
     equipment_name = extract_equipment_name(description)
     search_query = f"{equipment_name} gym tutorial"
     video_link = search_youtube(search_query)
@@ -146,6 +167,10 @@ def classify():
         filename = secure_filename(file.filename)
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
+
+        print(f"File saved to: {filepath}")
+        print(f"File size: {os.path.getsize(filepath)} bytes")
+        print(f"File type: {file.content_type}")
 
         description, video_link = classify_gym_equipment(filepath)
 
