@@ -6,7 +6,7 @@ document.getElementById('classifyButton').addEventListener('click', function() {
         formData.append('image', file);
 
         // Update this line with your Heroku app URL
-        fetch('https://gym-classifier-76781534fd77.herokuapp.com/', {
+        fetch('https://gym-classifier-76781534fd77.herokuapp.com/classify', {
             method: 'POST',
             body: formData
         })

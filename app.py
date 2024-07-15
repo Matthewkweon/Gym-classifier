@@ -154,6 +154,9 @@ def classify():
             'video_link': video_link
         })
     
+@app.route('/<path:path>')
+def serve_static(path):
+    return send_from_directory('.', path)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
