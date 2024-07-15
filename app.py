@@ -7,8 +7,10 @@ import base64
 import io
 import requests
 import re
+from flash_cors import CORS
 
-app = Flask(__name__, static_folder='.')
+app = Flask(__name__)
+CORS(app)
 
 UPLOAD_FOLDER = 'uploads'
 if not os.path.exists(UPLOAD_FOLDER):
@@ -153,4 +155,8 @@ def classify():
         })
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
+
+"""gpt: sk-proj-sXORIZbmRQZuwh4LPkv3T3BlbkFJXw2IVGh1JH8igaY1KnuR"""
+"""Youtube: AIzaSyBNjJ77RFoRtdIyB9UtoAfTOKMfMPZbdAw"""
