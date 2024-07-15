@@ -7,7 +7,7 @@ import base64
 import io
 import requests
 import re
-from flash_cors import CORS
+from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
