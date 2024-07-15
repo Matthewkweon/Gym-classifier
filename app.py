@@ -10,7 +10,7 @@ import re
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "https://matthewkweon.github.io"}})
 
 UPLOAD_FOLDER = 'uploads'
 if not os.path.exists(UPLOAD_FOLDER):
@@ -153,6 +153,7 @@ def classify():
             'description': description,
             'video_link': video_link
         })
+    
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
