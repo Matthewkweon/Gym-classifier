@@ -187,5 +187,3 @@ if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
 
-"""gpt: sk-proj-sXORIZbmRQZuwh4LPkv3T3BlbkFJXw2IVGh1JH8igaY1KnuR"""
-"""Youtube: AIzaSyBNjJ77RFoRtdIyB9UtoAfTOKMfMPZbdAw"""
