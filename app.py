@@ -11,7 +11,7 @@ from flask_cors import CORS
 import cv2
 import numpy as np
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static', template_folder='templates')
 CORS(app, resources={r"/*": {"origins": "https://matthewkweon.github.io"}})
 
 UPLOAD_FOLDER = 'uploads'
