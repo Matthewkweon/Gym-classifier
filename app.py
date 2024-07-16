@@ -152,7 +152,7 @@ def classify_gym_equipment(image_path):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return send_from_directory('.', 'index.html')
 
 @app.route('/classify', methods=['POST'])
 def classify():
@@ -181,7 +181,7 @@ def classify():
     
 @app.route('/<path:path>')
 def serve_static(path):
-    return send_from_directory('static', path)
+    return send_from_directory('.', path)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
