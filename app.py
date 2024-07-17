@@ -72,6 +72,8 @@ def search_youtube(query):
         'key': api_key,
         'maxResults': 50,
         'type': 'video'
+        'videoDuration': 'medium',  # Filters videos between 4 and 20 minutes
+        'order': 'relevance'  # Sort by relevance
     }
     
     try:
@@ -99,7 +101,7 @@ def search_youtube(query):
             duration = video_data['items'][0]['contentDetails']['duration']
             duration_seconds = parse_duration(duration)
             
-            if duration_seconds <= 180:
+            if duration_seconds <= 600:
                 return f"https://www.youtube.com/watch?v={video_id}"
         
         return f"No suitable tutorial videos found for query: {query}"
