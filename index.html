@@ -17,19 +17,39 @@
             padding: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        h1 {
+        h1, h2 {
             text-align: center;
         }
         #description {
             white-space: pre-wrap;
+        }
+        .info-section {
+            margin-bottom: 20px;
+        }
+        .info-section p {
+            margin: 10px 0;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Gym Equipment Classifier</h1>
+        
+        <div class="info-section">
+            <h2>About This Website</h2>
+            <p>Welcome to the Gym Equipment Classifier! This tool helps you identify gym equipment from an image and provides useful information about how to use it, what muscles it targets, and tips for proper form. Additionally, it will provide a link to a relevant YouTube tutorial to help you get started.</p>
+            <p>To use the website:</p>
+            <ol>
+                <li>Click on the "Choose File" button to upload an image of the gym equipment you want to classify.</li>
+                <li>Click on the "Classify Equipment" button to submit the image.</li>
+                <li>Wait a few moments while the tool processes the image and identifies the equipment.</li>
+                <li>Review the results, which include the name of the equipment, a brief description of its use, targeted muscles, tips for proper form, and a link to a YouTube tutorial.</li>
+            </ol>
+        </div>
+
         <input type="file" id="imageUpload" accept="image/*">
         <button id="classifyButton">Classify Equipment</button>
+        
         <h2>Result:</h2>
         <div id="description"></div>
         <div id="videoLink"></div>
