@@ -150,7 +150,7 @@ def classify_gym_equipment(image_path):
 
         description = response.choices[0].message.content
         formatted_description = format_description(description)
-        print(formatted_description)  # Print formatted description for debugging
+        # print(formatted_description)  # Print formatted description for debugging
     except Exception as e:
         print(f"OpenAI API Error: {str(e)}")
         return "Error processing image with AI", "No video available"
