@@ -115,15 +115,11 @@ def extract_equipment_name(description):
     return ' '.join(words[:3]) if len(words) > 3 else ' '.join(words)
 
 def format_description(description):
-    formatted_description = description.replace("**How it’s used and what muscles it targets:**", "\n\n**How it’s used and what muscles it targets:**\n")
-    formatted_description = formatted_description.replace("**Muscles targeted**:", "\n\n**Muscles targeted**:\n")
-    formatted_description = formatted_description.replace("**Tips for proper form or common mistakes to avoid:**", "\n\n**Tips for proper form or common mistakes to avoid:**\n")
-    formatted_description = formatted_description.replace("1. ", "\n1. ")
-    formatted_description = formatted_description.replace("2. ", "\n2. ")
-    formatted_description = formatted_description.replace("3. ", "\n3. ")
-    formatted_description = formatted_description.replace("4. ", "\n4. ")
-    formatted_description = formatted_description.replace("5. ", "\n5. ")
-    formatted_description = formatted_description.replace(" - ", "\n - ")
+    formatted_description = description.replace(" - ", "\n - ")
+    formatted_description = formatted_description.replace("**1) How it's used and what muscles it targets:**", "\n\n**1) How it's used and what muscles it targets:**\n")
+    formatted_description = formatted_description.replace("**2) Tips for proper form or common mistakes to avoid:**", "\n\n**2) Tips for proper form or common mistakes to avoid:**\n")
+    formatted_description = formatted_description.replace(" - *Use:*", "\n - *Use:*")
+    formatted_description = formatted_description.replace(" - *Muscles Targeted:*", "\n - *Muscles Targeted:*")
 
     return formatted_description
 
