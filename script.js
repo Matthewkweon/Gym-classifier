@@ -5,14 +5,13 @@ document.getElementById('classifyButton').addEventListener('click', function() {
         const formData = new FormData();
         formData.append('image', file);
 
-        // Update this line with your Heroku app URL
         fetch('https://gym-classifier-76781534fd77.herokuapp.com/classify', {
             method: 'POST',
             body: formData
         })
         .then(response => response.json())
         .then(data => {
-            document.getElementById('description').textContent = data.description;
+            document.getElementById('description').innerHTML = data.description.replace(/\n/g, '<br>');
             document.getElementById('videoLink').innerHTML = `<a href="${data.video_link}" target="_blank">Watch Tutorial Video</a>`;
         })
         .catch(error => console.error('Error:', error));

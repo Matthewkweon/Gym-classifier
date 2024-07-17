@@ -1,19 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gym Equipment Classifier</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        #description {
+            white-space: pre-wrap;
+        }
+    </style>
 </head>
 <body>
-    <h1>Gym Equipment Classifier</h1>
-    <input type="file" id="imageUpload" accept="image/*">
-    <button id="classifyButton">Classify Equipment</button>
-    <div id="result">
+    <div class="container">
+        <h1>Gym Equipment Classifier</h1>
+        <input type="file" id="imageUpload" accept="image/*">
+        <button id="classifyButton">Classify Equipment</button>
         <h2>Result:</h2>
-        <p id="description"></p>
-        <p id="videoLink"></p>
+        <div id="description"></div>
+        <div id="videoLink"></div>
     </div>
     <script src="script.js"></script>
 </body>
