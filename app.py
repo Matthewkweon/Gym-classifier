@@ -135,7 +135,7 @@ def classify_gym_equipment(image_path):
                 {
                     "role": "user",
                     "content": [
-                        {"type": "text", "text": "Identify the gym equipment shown in this image. Please provide the name of the gym equipment as so: ''Equipment: name of equipment.'' Provide a brief discription in a to-do list format: 1) How it's used and what muscles it targets, and 2) Tips for proper form or common mistakes to avoid. Put this in a to-do list type format and make it easy to understand for beginners."},
+                        {"type": "text", "text": "Identify the gym equipment shown in this image. Please provide the name of the gym equipment as so: ''Equipment: name of equipment.'' Provide a brief description in a to-do list format: 1) How it's used and what muscles it targets, and 2) Tips for proper form or common mistakes to avoid. Put this in a to-do list type format and make it easy to understand for beginners."},
                         {
                             "type": "image_url",
                             "image_url": {
@@ -149,8 +149,8 @@ def classify_gym_equipment(image_path):
         )
 
         description = response.choices[0].message.content
-        formatted_discription = format_description(description)
-
+        formatted_description = format_description(description)
+        print(formatted_description)  # Print formatted description for debugging
     except Exception as e:
         print(f"OpenAI API Error: {str(e)}")
         return "Error processing image with AI", "No video available"
@@ -159,7 +159,8 @@ def classify_gym_equipment(image_path):
     search_query = f"{equipment_name} gym tutorial"
     video_link = search_youtube(search_query)
 
-    return formatted_discription, video_link
+    return formatted_description, video_link
+
 
 @app.route('/')
 def index():
