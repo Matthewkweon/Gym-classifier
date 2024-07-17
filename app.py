@@ -22,9 +22,6 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 client = OpenAI()
 
-# Include the functions from your original code
-
-
 def encode_image(image_path):
     try:
         with Image.open(image_path) as img:
@@ -69,6 +66,7 @@ def search_youtube(query):
     }
     
     try:
+        print(f"Searching YouTube for: {query} tutorial")  # Print the search query
         search_response = requests.get(search_url, params=search_params)
         search_response.raise_for_status()
         search_data = search_response.json()
@@ -150,13 +148,13 @@ def classify_gym_equipment(image_path):
 
         description = response.choices[0].message.content
         formatted_description = format_description(description)
-        # print(formatted_description)  # Print formatted description for debugging
     except Exception as e:
         print(f"OpenAI API Error: {str(e)}")
         return "Error processing image with AI", "No video available"
 
     equipment_name = extract_equipment_name(description)
     search_query = f"{equipment_name} gym tutorial"
+    print(f"Equipment Name: {equipment_name}")  # Print the equipment name
     video_link = search_youtube(search_query)
 
     return formatted_description, video_link
@@ -184,8 +182,7 @@ def classify():
         print(f"File size: {os.path.getsize(filepath)} bytes")
         print(f"File type: {file.content_type}")
 
-        discription = description, video_link = classify_gym_equipment(filepath)
-        formatted_discription = format_description(description)
+        description, video_link = classify_gym_equipment(filepath)
 
         return jsonify({
             'description': description,
@@ -199,4 +196,3 @@ def serve_static(path):
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
-
