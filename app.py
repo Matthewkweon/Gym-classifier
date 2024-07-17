@@ -10,6 +10,9 @@ import re
 from flask_cors import CORS
 import cv2
 import numpy as np
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "https://matthewkweon.github.io"}})
@@ -20,7 +23,10 @@ if not os.path.exists(UPLOAD_FOLDER):
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-client = OpenAI()
+openai_api_key = os.getenv('OPENAI_API_KEY')
+if openai_api_key is None:
+    raise ValueError("No OPENAI_API_KEY found in environment variables")
+client = OpenAI(api_key=openai_api_key)
 
 # Include the functions from your original code
 
