@@ -71,7 +71,7 @@ def search_youtube(query):
         'q': f"{query} tutorial",
         'key': api_key,
         'maxResults': 50,
-        'type': 'video'
+        'type': 'video',
         'videoDuration': 'medium',  # Filters videos between 4 and 20 minutes
         'order': 'relevance'  # Sort by relevance
     }
