@@ -114,6 +114,19 @@ def extract_equipment_name(description):
     words = description.split()
     return ' '.join(words[:3]) if len(words) > 3 else ' '.join(words)
 
+def format_description(description):
+    formatted_description = description.replace("**How it’s used and what muscles it targets:**", "\n\n**How it’s used and what muscles it targets:**\n")
+    formatted_description = formatted_description.replace("**Muscles targeted**:", "\n\n**Muscles targeted**:\n")
+    formatted_description = formatted_description.replace("**Tips for proper form or common mistakes to avoid:**", "\n\n**Tips for proper form or common mistakes to avoid:**\n")
+    formatted_description = formatted_description.replace("1. ", "\n1. ")
+    formatted_description = formatted_description.replace("2. ", "\n2. ")
+    formatted_description = formatted_description.replace("3. ", "\n3. ")
+    formatted_description = formatted_description.replace("4. ", "\n4. ")
+    formatted_description = formatted_description.replace("5. ", "\n5. ")
+    formatted_description = formatted_description.replace(" - ", "\n - ")
+
+    return formatted_description
+
 def classify_gym_equipment(image_path):
     base64_image = encode_image(image_path)
     if base64_image is None:
@@ -140,6 +153,8 @@ def classify_gym_equipment(image_path):
         )
 
         description = response.choices[0].message.content
+        formatted_discription = format_description(description)
+
     except Exception as e:
         print(f"OpenAI API Error: {str(e)}")
         return "Error processing image with AI", "No video available"
@@ -148,7 +163,7 @@ def classify_gym_equipment(image_path):
     search_query = f"{equipment_name} gym tutorial"
     video_link = search_youtube(search_query)
 
-    return description, video_link
+    return formatted_discription, video_link
 
 @app.route('/')
 def index():
@@ -172,7 +187,8 @@ def classify():
         print(f"File size: {os.path.getsize(filepath)} bytes")
         print(f"File type: {file.content_type}")
 
-        description, video_link = classify_gym_equipment(filepath)
+        discription = description, video_link = classify_gym_equipment(filepath)
+        formatted_discription = format_description(description)
 
         return jsonify({
             'description': description,
