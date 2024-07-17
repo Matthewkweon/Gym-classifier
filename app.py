@@ -126,7 +126,7 @@ def classify_gym_equipment(image_path):
                 {
                     "role": "user",
                     "content": [
-                        {"type": "text", "text": "Identify the gym equipment shown in this image. Please provide the name of the gym equipment as so: ''Equipment: name of equipment.'' Provide a brief, step by step-using numbering system-description including: 1) How it's used and what muscles it targets, and 2) Tips for proper form or common mistakes to avoid. Make this discription concise, simple, and easy to understand for new gym goers."},
+                        {"type": "text", "text": "Identify the gym equipment shown in this image. Please provide the name of the gym equipment as so: ''Equipment: name of equipment.'' Provide a brief, 3-paragraph description including: 1) What the equipment is, 2) How it's used and what muscles it targets, and 3) Tips for proper form or common mistakes to avoid. Keep each paragraph concise, about 2-3 sentences long."},
                         {
                             "type": "image_url",
                             "image_url": {
