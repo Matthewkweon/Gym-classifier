@@ -72,6 +72,7 @@ def search_youtube(query):
         'key': api_key,
         'maxResults': 50,
         'type': 'video',
+        'videoDuration': 'short',  # Filters videos between 1 and 4 minutes
         'order': 'relevance'  # Sort by relevance
     }
     
