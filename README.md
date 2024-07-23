@@ -18,56 +18,63 @@ Prerequisites
 - Heroku CLI
 
 ### Install Dependencies
-'''
+
+```
 pip install -r requirements.txt
-'''
+```
 
 
 ### Set Up Environment Variables
 Create a .env file in the root directory and add your OpenAI API key and YouTube API key:
-'''
+
+```
 OPENAI_API_KEY=your_openai_api_key
 YOUTUBE_API_KEY=your_youtube_api_key
-'''
+```
 You can create your own api's using openAI and youtube's websites and softwares.
 
 ### Run the Application Locally
-'''
+
+```
 python app.py
-'''
+```
 
 ### Deploy to Heroku
 Log in to Heroku:
-'''
-heroku login
-'''
-Create a new Heroku app:
-'''
 
-heroku create gym-classifier
-'''
+```heroku login
+```
+Create a new Heroku app:
+
+
+```heroku create gym-classifier
+```
 Set the buildpacks for the app:
-'''
+```
 heroku buildpacks:add heroku/python
 heroku buildpacks:add --index 1 https://github.com/heroku/heroku-buildpack-apt
-'''
+```
 Create an Aptfile in the root directory with the following content:
 
-'''
+
+```
 libgl1-mesa-glx
 libglib2.0-0
-'''
+```
+
 Add your environment variables to Heroku:
-'''
+
+```
 heroku config:set OPENAI_API_KEY=your_openai_api_key
 heroku config:set YOUTUBE_API_KEY=your_youtube_api_key
-'''
+```
 Deploy the app:
-'''
+
+```
 git add .
 git commit -m "Deploying Gym Classifier"
 git push heroku main
-'''
+```
 
 ### Access the Application
 Open your browser and navigate to the URL provided by Heroku (e.g., https://gym-classifier.herokuapp.com).
