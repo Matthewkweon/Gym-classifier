@@ -42,12 +42,14 @@ python app.py
 ### Deploy to Heroku
 Log in to Heroku:
 
-```heroku login
+```
+heroku login
 ```
 Create a new Heroku app:
 
 
-```heroku create gym-classifier
+```
+heroku create gym-classifier
 ```
 Set the buildpacks for the app:
 ```
