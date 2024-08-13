@@ -109,31 +109,37 @@ def search_youtube(query):
     except requests.RequestException as e:
         return f"Error fetching YouTube data: {str(e)}"
 
-def extract_equipment_name(description):
-    # Try to find "Equipment: [name]" pattern
+def extract_equipment_and_exercise(description):
+    equipment = None
+    exercise = None
+
+    # Extract equipment
     equipment_match = re.search(r"Equipment:\s*(.+?)(?:\.|\n|$)", description, re.IGNORECASE)
     if equipment_match:
-        return equipment_match.group(1).strip()
-    
-    # Look for keywords that often precede equipment names
-    keyword_matches = re.findall(r"\b(machine|equipment|apparatus|device|tool|bench|rack|bar|cable)\s+(\w+(?:\s+\w+){0,2})", description, re.IGNORECASE)
-    if keyword_matches:
-        return max(keyword_matches, key=lambda x: len(x[1]))[0] + " " + max(keyword_matches, key=lambda x: len(x[1]))[1]
-    
-    # Extract the first sentence and look for a noun phrase
-    first_sentence = description.split('.')[0]
-    noun_phrase_match = re.search(r"\b(?:the|a|an)\s+(.+)", first_sentence, re.IGNORECASE)
-    if noun_phrase_match:
-        return noun_phrase_match.group(1).strip()
-    
-    # If all else fails, return the first few words
-    words = description.split()
-    return ' '.join(words[:3]) if len(words) > 3 else ' '.join(words)
+        equipment = equipment_match.group(1).strip()
 
-def format_search_query(equipment_name):
+    # Extract exercise
+    exercise_match = re.search(r"Exercise:\s*(.+?)(?:\.|\n|$)", description, re.IGNORECASE)
+    if exercise_match:
+        exercise = exercise_match.group(1).strip()
+
+    # If either is missing, try to extract from the first sentence
+    if not equipment or not exercise:
+        first_sentence = description.split('.')[0]
+        words = first_sentence.split()
+        if not equipment:
+            equipment = ' '.join(words[:3]) if len(words) > 3 else ' '.join(words)
+        if not exercise:
+            exercise = ' '.join(words[-3:]) if len(words) > 3 else ' '.join(words)
+
+    return equipment, exercise
+
+def format_search_query(equipment, exercise):
+    # Combine equipment and exercise information for a more targeted search
+    base_query = f"{equipment} {exercise}"
     # Add relevant keywords to improve search results
-    keywords = ["gym", "exercise", "workout", "fitness"]
-    return f"{equipment_name} {' '.join(keywords)} tutorial"
+    keywords = ["gym", "workout", "tutorial", "how to"]
+    return f"{base_query} {' '.join(keywords)}"
 
 def format_description(description):
     formatted_description = description.replace(" - ", "\n - ")
@@ -156,7 +162,7 @@ def classify_gym_equipment(image_path):
                 {
                     "role": "user",
                     "content": [
-                        {"type": "text", "text": "Identify the gym equipment shown in this image. Please provide the name of the gym equipment as so: ''Equipment: name of equipment. Whether it is standing or sitting.'' Provide a brief description in a to-do list format: 1) How it's used and what muscles it targets, and 2) Tips for proper form or common mistakes to avoid. Put this in a to-do list type format and make it easy to understand for beginners."},
+                        {"type": "text", "text": "Identify the gym equipment shown in this image. Please provide the name of the gym equipment as so: ''Equipment: name of equipment. Exercise: name of exercise and whether it is standing or sitting.'' Provide a brief description in a to-do list format: 1) How it's used and what muscles it targets, and 2) Tips for proper form or common mistakes to avoid. Put this in a to-do list type format and make it easy to understand for beginners."},
                         {
                             "type": "image_url",
                             "image_url": {
@@ -171,13 +177,12 @@ def classify_gym_equipment(image_path):
 
         description = response.choices[0].message.content
         formatted_description = format_description(description)
-        # print(formatted_description)  # Print formatted description for debugging
     except Exception as e:
         print(f"OpenAI API Error: {str(e)}")
         return "Error processing image with AI", "No video available"
 
-    equipment_name = extract_equipment_name(description)
-    search_query = format_search_query(equipment_name)
+    equipment, exercise = extract_equipment_and_exercise(description)
+    search_query = format_search_query(equipment, exercise)
     video_link = search_youtube(search_query)
 
     return formatted_description, video_link
