@@ -138,7 +138,7 @@ def format_search_query(equipment, exercise):
     # Combine equipment and exercise information for a more targeted search
     base_query = f"{equipment} {exercise}"
     # Add relevant keywords to improve search results
-    keywords = ["gym", "workout", "tutorial", "how to"]
+    keywords = ["gym", "workout", "tutorial","rope", "how to"]
     return f"{base_query} {' '.join(keywords)}"
 
 def format_description(description):
