@@ -110,17 +110,30 @@ def search_youtube(query):
         return f"Error fetching YouTube data: {str(e)}"
 
 def extract_equipment_name(description):
-    equipment_match = re.search(r"Equipment: (.+?)\.?(\n|$)", description)
+    # Try to find "Equipment: [name]" pattern
+    equipment_match = re.search(r"Equipment:\s*(.+?)(?:\.|\n|$)", description, re.IGNORECASE)
     if equipment_match:
         return equipment_match.group(1).strip()
     
-    first_sentence = description.split('.')[0]
-    noun_phrase_match = re.search(r"(The|A|An) (.+)", first_sentence, re.IGNORECASE)
-    if noun_phrase_match:
-        return noun_phrase_match.group(2).strip()
+    # Look for keywords that often precede equipment names
+    keyword_matches = re.findall(r"\b(machine|equipment|apparatus|device|tool|bench|rack|bar|cable)\s+(\w+(?:\s+\w+){0,2})", description, re.IGNORECASE)
+    if keyword_matches:
+        return max(keyword_matches, key=lambda x: len(x[1]))[0] + " " + max(keyword_matches, key=lambda x: len(x[1]))[1]
     
+    # Extract the first sentence and look for a noun phrase
+    first_sentence = description.split('.')[0]
+    noun_phrase_match = re.search(r"\b(?:the|a|an)\s+(.+)", first_sentence, re.IGNORECASE)
+    if noun_phrase_match:
+        return noun_phrase_match.group(1).strip()
+    
+    # If all else fails, return the first few words
     words = description.split()
     return ' '.join(words[:3]) if len(words) > 3 else ' '.join(words)
+
+def format_search_query(equipment_name):
+    # Add relevant keywords to improve search results
+    keywords = ["gym", "exercise", "workout", "fitness"]
+    return f"{equipment_name} {' '.join(keywords)} tutorial"
 
 def format_description(description):
     formatted_description = description.replace(" - ", "\n - ")
@@ -164,7 +177,7 @@ def classify_gym_equipment(image_path):
         return "Error processing image with AI", "No video available"
 
     equipment_name = extract_equipment_name(description)
-    search_query = f"{equipment_name} gym tutorial"
+    search_query = format_search_query(equipment_name)
     video_link = search_youtube(search_query)
 
     return formatted_description, video_link
